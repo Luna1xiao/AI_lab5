@@ -50,10 +50,11 @@ class MutilModalClassifier(nn.Module):
             return self.fc(torch.cat((bert_attn_output, vgg_attn_output), dim=1))
         elif self.model_type == 'only_picture':
             vgg_feature = self.vgg(pic)
-            
-            return self.fc(torch.cat((vgg_feature, torch.zeros(size=(pic.shape[0], 768)).to(self.device)), dim=1))
+            vgg_attn_output = self.attention_vgg(vgg_feature)  
+            return self.fc(torch.cat((vgg_attn_output, torch.zeros(size=(vgg_feature.size(0), 768)).to(self.device)), dim=1))
         elif self.model_type == 'only_text':
             bert_out = self.bert(input_ids, token_type_ids, attention_mask)
-            return self.fc(torch.cat((bert_out.last_hidden_state[:, 0], torch.zeros(size=(pic.shape[0], 4096)).to(self.device)), dim=1))
+            bert_attn_output = self.attention_bert(bert_out.last_hidden_state) 
+            return self.fc(torch.cat((bert_attn_output, torch.zeros(size=(bert_out.last_hidden_state.size(0), 4096)).to(self.device)), dim=1))
 
     
