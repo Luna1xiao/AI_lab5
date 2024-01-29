@@ -28,7 +28,7 @@ We select some important files for detailed description.
 ```python
 ├─data
 │  └─data
-│      ├─data
+│      ├─data#数据集
 │      ├─test_without_label.txt
 │      └─train.txt
 ├─bert-base-uncased #手动拉取的bert-base-uncased的参数
